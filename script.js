@@ -26,3 +26,5 @@ async function loadPopularShows() {
 }
 
 loadPopularShows();
+
+//add script.js commit to git
