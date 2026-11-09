@@ -1,5 +1,21 @@
 const showSelect = document.getElementById("show-select");
 
+function fillDropdown(shows) {
+    showSelect.innerHTML = "";
+
+    const placeholder = document.createElement("option");
+    placeholder.textContent = "Select a show";
+    placeholder.value = "";
+    showSelect.appendChild(placeholder);
+
+    for (const show of shows) {
+        const option = document.createElement("option");
+        option.textContent = show.name;
+        option.value = show.id;
+        showSelect.appendChild(option);
+    }
+}
+
 async function loadPopularShows() {
   const url = "https://api.themoviedb.org/3/tv/popular";
 
@@ -19,12 +35,10 @@ async function loadPopularShows() {
     }
 
     const data = await res.json();
-    console.log(data);
+    fillDropdown(data.results);
   } catch (error) {
     console.error(error);
   }
 }
 
 loadPopularShows();
-
-//add script.js commit to git
