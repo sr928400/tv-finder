@@ -1,5 +1,6 @@
 const showSelect = document.getElementById("show-select");
 const showDetails = document.getElementById("show-details");
+const message = document.getElementById("message");
 
 const requestOptions = {
     method:"GET",
@@ -8,6 +9,10 @@ const requestOptions = {
         Authorization: `Bearer ${TMDB_TOKEN}`
     }
 };
+
+function showMessage(text) {
+    message.textContent = text;
+}
 
 function fillDropdown(shows) {
     showSelect.innerHTML = "";
@@ -23,23 +28,6 @@ function fillDropdown(shows) {
         option.value = show.id;
         showSelect.appendChild(option);
     }
-}
-
-async function loadPopularShows() {
-  const url = "https://api.themoviedb.org/3/tv/popular";
-
-  try {
-    const res = await fetch(url, requestOptions);
-
-    if (!res.ok) {
-      throw new Error(`Request failed with status ${res.status}`);
-    }
-
-    const data = await res.json();
-    fillDropdown(data.results);
-  } catch (error) {
-    console.error(error);
-  }
 }
 
 function displayDetails(show) {
@@ -88,20 +76,53 @@ function displayDetails(show) {
   showDetails.appendChild(status);
 }
 
+async function loadPopularShows() {
+  const url = "https://api.themoviedb.org/3/tv/popular";
+
+  try {
+    showMessage("Loading popular shows...");
+
+    const res = await fetch(url, requestOptions);
+
+    if (!res.ok) {
+        if (res.status === 401) {
+            throw new Error("TMDB rejected the API token.");
+        }
+
+        throw new Error(`Request failed with status ${res.status}`);
+    }
+
+    const data = await res.json();
+    showMessage("");
+    fillDropdown(data.results);
+  } catch (error) {
+    console.error(error);
+    showMessage(error.message);
+  }
+}
+
 async function loadShowDetails(id) {
   const url = `https://api.themoviedb.org/3/tv/${id}`;
 
   try {
+    showMessage("Loading show details...");
+
     const res = await fetch(url, requestOptions);
 
     if (!res.ok) {
-      throw new Error(`Request failed with status ${res.status}`);
+        if (res.status === 401) {
+            throw new Error("TMDB rejected the API token.");
+        }
+
+        throw new Error(`Request failed with status ${res.status}`);
     }
 
     const show = await res.json();
+    showMessage("");
     displayDetails(show);
   } catch (error) {
     console.error(error);
+    showMessage(error.message);
   }
 }
 
