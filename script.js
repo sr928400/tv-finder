@@ -42,6 +42,52 @@ async function loadPopularShows() {
   }
 }
 
+function displayDetails(show) {
+  showDetails.innerHTML = "";
+
+  const heading = document.createElement("h2");
+  heading.textContent = show.name;
+  showDetails.appendChild(heading);
+
+  if (show.poster_path) {
+    const poster = document.createElement("img");
+    poster.src = `https://image.tmdb.org/t/p/w500${show.poster_path}`;
+    poster.alt = `${show.name} poster`;
+    showDetails.appendChild(poster);
+  } else {
+    const noPoster = document.createElement("p");
+    noPoster.textContent = "No poster available";
+    showDetails.appendChild(noPoster);
+  }
+
+  const overview = document.createElement("p");
+  overview.textContent = show.overview;
+  showDetails.appendChild(overview);
+
+  const genres = document.createElement("p");
+
+  let genreNames = [];
+
+  for (const genre of show.genres) {
+    genreNames.push(genre.name);
+  }
+
+  genres.textContent = `Genres: ${genreNames.join(", ")}`;
+  showDetails.appendChild(genres);
+
+  const seasons = document.createElement("p");
+  seasons.textContent = `Seasons: ${show.number_of_seasons}`;
+  showDetails.appendChild(seasons);
+
+  const episodes = document.createElement("p");
+  episodes.textContent = `Episodes: ${show.number_of_episodes}`;
+  showDetails.appendChild(episodes);
+
+  const status = document.createElement("p");
+  status.textContent = `Status: ${show.status}`;
+  showDetails.appendChild(status);
+}
+
 async function loadShowDetails(id) {
   const url = `https://api.themoviedb.org/3/tv/${id}`;
 
@@ -53,7 +99,7 @@ async function loadShowDetails(id) {
     }
 
     const show = await res.json();
-    console.log(show);
+    displayDetails(show);
   } catch (error) {
     console.error(error);
   }
