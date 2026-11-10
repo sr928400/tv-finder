@@ -10,8 +10,9 @@ const requestOptions = {
     }
 };
 
-function showMessage(text) {
+function showMessage(text, type = "") {
     message.textContent = text;
+    message.className = type;
 }
 
 function fillDropdown(shows) {
@@ -80,7 +81,7 @@ async function loadPopularShows() {
   const url = "https://api.themoviedb.org/3/tv/popular";
 
   try {
-    showMessage("Loading popular shows...");
+    showMessage("Loading popular shows...", "loading");
 
     const res = await fetch(url, requestOptions);
 
@@ -97,7 +98,7 @@ async function loadPopularShows() {
     fillDropdown(data.results);
   } catch (error) {
     console.error(error);
-    showMessage(error.message);
+    showMessage(error.message, "error");
   }
 }
 
@@ -105,7 +106,7 @@ async function loadShowDetails(id) {
   const url = `https://api.themoviedb.org/3/tv/${id}`;
 
   try {
-    showMessage("Loading show details...");
+    showMessage("Loading show details...", "loading");
 
     const res = await fetch(url, requestOptions);
 
@@ -122,7 +123,7 @@ async function loadShowDetails(id) {
     displayDetails(show);
   } catch (error) {
     console.error(error);
-    showMessage(error.message);
+    showMessage(error.message, "error");
   }
 }
 
